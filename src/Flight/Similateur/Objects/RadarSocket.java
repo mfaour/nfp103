@@ -154,6 +154,8 @@ public class RadarSocket extends Thread {
         }
         Avion updatedAv = null;
         Optional<Avion> optionalFlight = _detectedFlights.stream().filter(f -> f.getFlightId() == msg.content.getFlightId()).findFirst();
+        
+        
         if (optionalFlight != null && optionalFlight.isPresent()) {
             updatedAv = optionalFlight.get();
             updatedAv.setDeplacement(msg.content.getDeplacement());
