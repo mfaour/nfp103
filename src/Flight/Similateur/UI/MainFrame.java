@@ -16,6 +16,9 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        this.setTitle("Accov-flight simulator...");
+        this.setSize(1000, 600);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -31,90 +34,120 @@ public class MainFrame extends javax.swing.JFrame {
         btnVol = new javax.swing.JButton();
         btnRadar = new javax.swing.JButton();
         btnController = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        txtHost = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtPort = new javax.swing.JTextField();
+        txtRefreshTime = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
 
+        btnServer.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         btnServer.setText("Lancer le Serveur");
         btnServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnServerActionPerformed(evt);
             }
         });
+        getContentPane().add(btnServer);
+        btnServer.setBounds(30, 210, 400, 37);
+        btnServer.getAccessibleContext().setAccessibleName("btnServer");
 
+        btnVol.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         btnVol.setText("Nouveau Vol");
+        btnVol.setEnabled(false);
         btnVol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVolActionPerformed(evt);
             }
         });
+        getContentPane().add(btnVol);
+        btnVol.setBounds(30, 260, 400, 37);
+        btnVol.getAccessibleContext().setAccessibleName("Nouveau vol");
 
+        btnRadar.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         btnRadar.setText("Nouveau Radar");
+        btnRadar.setEnabled(false);
         btnRadar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRadarActionPerformed(evt);
             }
         });
+        getContentPane().add(btnRadar);
+        btnRadar.setBounds(30, 310, 400, 37);
 
+        btnController.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         btnController.setText("Nouveau controlleur");
+        btnController.setEnabled(false);
         btnController.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnControllerActionPerformed(evt);
             }
         });
+        getContentPane().add(btnController);
+        btnController.setBounds(30, 360, 400, 40);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnServer, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnVol, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRadar, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnController, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(btnServer)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnVol)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRadar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnController)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel1.setText("Host name:");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(30, 50, 160, 29);
 
-        btnServer.getAccessibleContext().setAccessibleName("btnServer");
-        btnVol.getAccessibleContext().setAccessibleName("Nouveau vol");
+        txtHost.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        txtHost.setText("PC");
+        getContentPane().add(txtHost);
+        txtHost.setBounds(240, 40, 190, 35);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel2.setText("Port:");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(30, 100, 160, 29);
+
+        txtPort.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        txtPort.setText("9876");
+        getContentPane().add(txtPort);
+        txtPort.setBounds(240, 90, 190, 35);
+
+        txtRefreshTime.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        txtRefreshTime.setText("5");
+        getContentPane().add(txtRefreshTime);
+        txtRefreshTime.setBounds(240, 140, 190, 35);
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel3.setText("Refresh time:");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(30, 140, 160, 29);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolActionPerformed
-        VolFrame frame = new VolFrame();
+        int port = Integer.parseInt(txtPort.getText());   
+        int refreshTime = Integer.parseInt(txtRefreshTime.getText());
+
+        VolFrame frame = new VolFrame(port, txtHost.getText(),refreshTime);
         frame.setVisible(true);
-        
+
     }//GEN-LAST:event_btnVolActionPerformed
 
     private void btnServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServerActionPerformed
-        SACAFrame frame = new SACAFrame();
-        frame.setVisible(true);
+        int port = Integer.parseInt(txtPort.getText());
         btnServer.setEnabled(false);
+        btnRadar.setEnabled(true);
+        btnVol.setEnabled(true);
+        btnController.setEnabled(true);
+        new SACAFrame(port).setVisible(true);
     }//GEN-LAST:event_btnServerActionPerformed
 
     private void btnRadarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRadarActionPerformed
-       RadarFrame frame = new RadarFrame();
-        frame.setVisible(true);
+        int port = Integer.parseInt(txtPort.getText());
+        new GraphRadarFrame(port, txtHost.getText()).setVisible(true);
     }//GEN-LAST:event_btnRadarActionPerformed
 
     private void btnControllerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnControllerActionPerformed
-        ControllerFrame frame = new ControllerFrame();
-        frame.setVisible(true);
+        int port = Integer.parseInt(txtPort.getText());
+        new ControllerFrame(port, txtHost.getText()).setVisible(true);
     }//GEN-LAST:event_btnControllerActionPerformed
 
     /**
@@ -157,5 +190,11 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnRadar;
     private javax.swing.JButton btnServer;
     private javax.swing.JButton btnVol;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JTextField txtHost;
+    private javax.swing.JTextField txtPort;
+    private javax.swing.JTextField txtRefreshTime;
     // End of variables declaration//GEN-END:variables
 }
