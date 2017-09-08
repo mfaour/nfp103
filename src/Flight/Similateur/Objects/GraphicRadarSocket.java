@@ -11,25 +11,20 @@ import Flight.Similateur.Common.Coordonnees;
 import Flight.Similateur.Common.Message;
 import Flight.Similateur.UI.GraphRadarFrame;
 import com.sun.j3d.utils.geometry.Sphere;
-import com.sun.j3d.utils.universe.SimpleUniverse;
-import java.awt.GraphicsConfiguration;
+import com.sun.j3d.utils.geometry.Text2D;
+import java.awt.Font;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.j3d.Appearance;
-import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Canvas3D;
 import javax.media.j3d.ColoringAttributes;
-import javax.media.j3d.DirectionalLight;
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.PointArray;
 import javax.media.j3d.PointAttributes;
@@ -37,7 +32,6 @@ import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.swing.DefaultListModel;
-import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
@@ -58,6 +52,7 @@ public class GraphicRadarSocket extends Thread {
     private Socket _clientSocket;
     public List<Avion> _detectedFlights;
     public List<BranchGroup> _branchGroupList;
+    BranchGroup _branchGroup;
 
     public GraphicRadarSocket(GraphRadarFrame radarFrame, int port, String host) {
         _radarFrame = radarFrame;
@@ -68,7 +63,8 @@ public class GraphicRadarSocket extends Thread {
                 _radarFrame.txtInfo.append("Erreur lors de la connexion au serveur..");
                 return;
             }
-
+            _branchGroup = new BranchGroup();
+            _branchGroup.setCapability(BranchGroup.ALLOW_DETACH);
             _radarFrame.txtInfo.append("\nRadar est connecte'");
             _outStream = new ObjectOutputStream(_clientSocket.getOutputStream());
             _outStream.flush();
@@ -91,42 +87,19 @@ public class GraphicRadarSocket extends Thread {
             _detectedFlights = (ArrayList) lstClients;
             DefaultListModel listModel = new DefaultListModel();
             for (int i = 0; i < _detectedFlights.size(); i++) {
-                BranchGroup bg = createVolGraph(_detectedFlights.get(i));
-                _radarFrame._universe.addBranchGraph(bg);
+                createVolGraph(_detectedFlights.get(i));
+               
 
                 //listModel.addElement(_detectedFlights.get(i).getInfo());
             }
+             _radarFrame._universe.addBranchGraph(_branchGroup);
             //_radarFrame.lstFlights.setModel(listModel);
         }
-    }
-
-    private Canvas3D createUniverse() {
-        // Get the preferred graphics configuration for the default screen
-        GraphicsConfiguration config
-                = SimpleUniverse.getPreferredConfiguration();
-
-        // Create a Canvas3D using the preferred configuration
-        Canvas3D c = new Canvas3D(config);
-        // Create simple universe with view branch
-        _radarFrame._universe = new SimpleUniverse(c);
-
-        // This will move the ViewPlatform back a bit so the
-        // objects in the scene can be viewed.
-        _radarFrame._universe.getViewingPlatform().setNominalViewingTransform();
-
-        // Ensure at least 5 msec per frame (i.e., < 200Hz)
-        _radarFrame._universe.getViewer().getView().setMinimumFrameCycleTime(5);
-
-        return c;
     }
 
     public BranchGroup createVolGraph1(Avion info) {
         BranchGroup lineGroup = new BranchGroup();
         Appearance app = new Appearance();
-        Random random = new Random();
-        float R = (float) (Math.random() * 256);
-        float G = (float) (Math.random() * 256);
-        float B = (float) (Math.random() * 256);
 
         ColoringAttributes ca = new ColoringAttributes(info.getVolColor(), ColoringAttributes.SHADE_FLAT);
         app.setColoringAttributes(ca);
@@ -154,14 +127,8 @@ public class GraphicRadarSocket extends Thread {
         return lineGroup;
     }
 
-    private BranchGroup createVolGraph(Avion info) {
+    private void createVolGraph(Avion info) {
 
-        if (_branchGroupList == null || _branchGroupList.isEmpty()) {
-            _branchGroupList = new ArrayList();
-        }
-
-        BranchGroup branchGroup = new BranchGroup();
-        branchGroup.setCapability(BranchGroup.ALLOW_DETACH);
         Sphere sphere = new Sphere(0.01f);
         TransformGroup tg = new TransformGroup();
         Transform3D transform = new Transform3D();
@@ -172,10 +139,18 @@ public class GraphicRadarSocket extends Thread {
         transform.setTranslation(vector);
         tg.setTransform(transform);
         tg.addChild(sphere);
-        branchGroup.addChild(tg);
-
+        sphere.setPickable(true);
+        Text2D text = new Text2D(info.getFlightName(), info.getVolColor(), "Serif", 10, Font.ITALIC);
         sphere.setName(info.getFlightName());
-        //Color3f light1Color = new Color3f(.1f, 1.4f, .1f); // green light
+        Appearance ap = new Appearance();
+        ColoringAttributes ca = new ColoringAttributes(info.getVolColor(), ColoringAttributes.NICEST);
+        ap.setColoringAttributes(ca);
+        sphere.setAppearance(ap);
+        sphere.addChild(text);
+        sphere.setCapability(BranchGroup.ALLOW_DETACH);
+        _branchGroup.addChild(tg);
+        
+        /*   //Color3f light1Color = new Color3f(.1f, 1.4f, .1f); // green light
         BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0),
                 100.0);
         Vector3f light1Direction = new Vector3f(4.0f, -7.0f, -12.0f);
@@ -183,8 +158,8 @@ public class GraphicRadarSocket extends Thread {
                 light1Direction);
         light1.setInfluencingBounds(bounds);
         branchGroup.addChild(light1);
-
-        return branchGroup;
+         */
+        //return _branchGroup;
     }
 
     private void SendObject(Message message) {
@@ -279,21 +254,14 @@ public class GraphicRadarSocket extends Thread {
             _detectedFlights.add(msg.content);
             updatedAv = msg.content;
         }
-        DefaultListModel listModel = new DefaultListModel();
-        try {
-            Enumeration children = _radarFrame._universe.getViewingPlatform().getViewPlatformTransform().getAllChildren();
-            while (children.hasMoreElements()) {
-
-                BranchGroup param = (BranchGroup)children.nextElement();
-               
-            }
-        } catch (Exception e) {
-        }
-
+        
+        _branchGroup.detach();
+        _branchGroup = new BranchGroup();
+        _branchGroup.setCapability(BranchGroup.ALLOW_DETACH); 
         for (int i = 0; i < _detectedFlights.size(); i++) {
-            BranchGroup bg = createVolGraph(_detectedFlights.get(i));
-            _radarFrame._universe.addBranchGraph(bg);
+           createVolGraph(_detectedFlights.get(i));
         }
+         _radarFrame._universe.addBranchGraph(_branchGroup);
         //_radarFrame.lstFlights.setModel(listModel);
         return updatedAv;
     }
