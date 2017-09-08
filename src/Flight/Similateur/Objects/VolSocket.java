@@ -51,7 +51,8 @@ public class VolSocket extends Thread {
     private ObjectOutputStream _outStream;
     private Socket _clientSocket;
 
-      Timer flightTimer;
+    Timer flightTimer;
+
     public VolSocket(VolFrame volFrame, int port, String host, int refreshTime) {
         _volFrame = volFrame;
         PORT = port;
@@ -104,8 +105,9 @@ public class VolSocket extends Thread {
             Message msg = new Message("Connection closed..", "flight", _volName, _avion, "SACA");
             _outStream.writeObject(msg);
             _outStream.flush();
-            if ( flightTimer != null)
+            if (flightTimer != null) {
                 flightTimer.stop();
+            }
 
         } catch (IOException ex) {
             Logger.getLogger(VolSocket.class.getName()).log(Level.SEVERE, null, ex);
@@ -114,21 +116,18 @@ public class VolSocket extends Thread {
 
     private void receiveObject() {
         try {
-            
+
             Object obj = _inStream.readObject();
             _volFrame.txtInfo.append("\n[SACA]>>[ME]: New message received..");
             handleMessage(obj);
 
-        }
-        catch(EOFException ex)
-        {
+        } catch (EOFException ex) {
             System.out.println("Client closed");
-        }
-        catch (IOException ex) {
-            System.out.println("Client closed:"+ex.getMessage());
-           // Logger.getLogger(VolSocket.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            System.out.println("Client closed:" + ex.getMessage());
+            // Logger.getLogger(VolSocket.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-          // Logger.getLogger(VolSocket.class.getName()).log(Level.SEVERE, null, ex);
+            // Logger.getLogger(VolSocket.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -164,7 +163,7 @@ public class VolSocket extends Thread {
             // avec le gestionnaire de vols
             sendClosingObject();
             _clientSocket.close();
-            
+
             this.interrupt();
         } catch (IOException ex) {
             Logger.getLogger(VolFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -236,7 +235,11 @@ public class VolSocket extends Thread {
         _deplacement.setVitesse((int) (600 + numberGenerator.nextInt(100) % 200));
         _volName = getRandomFlightName();
         _avion = new Avion(_coord, _deplacement, _volName);
-        _avion.setVolColor(new Color3f(numberGenerator.nextFloat(), numberGenerator.nextFloat(), numberGenerator.nextFloat()));
+        float r = (float)(numberGenerator.nextFloat() / 2f + 0.5);
+        float g = (float)(numberGenerator.nextFloat() / 2f + 0.5);
+        float b = (float)(numberGenerator.nextFloat() / 2f + 0.5);
+
+        _avion.setVolColor(new Color3f(r,g,b));
 
         _volFrame.setTitle("Vol " + _volName);
     }
@@ -345,11 +348,12 @@ public class VolSocket extends Thread {
 
     public void run() {
         while (true) {
-            if ( _volFrame == null || _inStream == null || _outStream == null ||
-                    _clientSocket.isClosed() || !_clientSocket.isConnected() ||
-                    _clientSocket.isInputShutdown() || _clientSocket.isOutputShutdown())
+            if (_volFrame == null || _inStream == null || _outStream == null
+                    || _clientSocket.isClosed() || !_clientSocket.isConnected()
+                    || _clientSocket.isInputShutdown() || _clientSocket.isOutputShutdown()) {
                 break;
-           
+            }
+
             receiveObject();
         }
     }

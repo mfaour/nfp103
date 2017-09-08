@@ -82,7 +82,7 @@ public class MainFrame extends javax.swing.JFrame {
         btnRadar.setBounds(30, 310, 400, 37);
 
         btnController.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        btnController.setText("Nouveau controlleur");
+        btnController.setText("Nouveau Controleur");
         btnController.setEnabled(false);
         btnController.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -123,7 +123,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel3.setBounds(30, 140, 160, 29);
 
         btnGraphicRadar.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        btnGraphicRadar.setText("Nouveau Graphic Radar");
+        btnGraphicRadar.setText("Nouveau Radar Graphique");
         btnGraphicRadar.setEnabled(false);
         btnGraphicRadar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
