@@ -96,7 +96,7 @@ public class GraphicRadarSocket extends Thread {
             //_radarFrame.lstFlights.setModel(listModel);
         }
     }
-
+/*
     public BranchGroup createVolGraph1(Avion info) {
         BranchGroup lineGroup = new BranchGroup();
         Appearance app = new Appearance();
@@ -126,7 +126,7 @@ public class GraphicRadarSocket extends Thread {
 
         return lineGroup;
     }
-
+*/
     private void createVolGraph(Avion info) {
 
         Sphere sphere = new Sphere(0.01f);
@@ -140,7 +140,7 @@ public class GraphicRadarSocket extends Thread {
         tg.setTransform(transform);
         tg.addChild(sphere);
         sphere.setPickable(true);
-        Text2D text = new Text2D(info.getFlightName(), info.getVolColor(), "Serif", 10, Font.ITALIC);
+        Text2D text = new Text2D(info.getFlightName() + "(alt:"+info.getPosition().getAltitude()+")", info.getVolColor(), "Serif", 12, Font.BOLD);
         sphere.setName(info.getFlightName());
         Appearance ap = new Appearance();
         ColoringAttributes ca = new ColoringAttributes(info.getVolColor(), ColoringAttributes.NICEST);
