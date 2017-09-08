@@ -17,12 +17,12 @@ public class SACAFrame extends javax.swing.JFrame {
     /**
      * Creates new form ServerFrame
      */
-    public SACAFrame() {
+    public SACAFrame(int port) {
         initComponents();
         this.setTitle("SACA...");
         this.setLocationRelativeTo(null);
         this.setSize(1500, 800);
-        new SocketSACA(this);
+        new SocketSACA(this,port);
     }
 
     /**
@@ -67,7 +67,7 @@ public class SACAFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+   /* public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
@@ -78,7 +78,7 @@ public class SACAFrame extends javax.swing.JFrame {
                 new SACAFrame().setVisible(true);
             }
         });
-    }
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;

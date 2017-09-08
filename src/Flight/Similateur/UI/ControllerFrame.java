@@ -20,12 +20,12 @@ public class ControllerFrame extends javax.swing.JFrame {
     ControllerSocket _socketClient = null;
     private int _flightId;
 
-    public ControllerFrame() {
+    public ControllerFrame(int port, String host) {
         initComponents();
         this.setSize(1500, 800);
         this.setTitle("Controller...");
         this.setLocationRelativeTo(null);
-        _socketClient = new ControllerSocket(this);
+        _socketClient = new ControllerSocket(this,port,host);
     }
 
     /**
@@ -241,7 +241,7 @@ public class ControllerFrame extends javax.swing.JFrame {
             btnChangeCap.setEnabled(true);
             btnChangeVitesse.setEnabled(true);
             btnChangeAltitude.setEnabled(true);
-        } else {
+        } /*else {
             _flightId = 0;
             txtX.setText("0");
             txtY.setText("0");
@@ -250,7 +250,7 @@ public class ControllerFrame extends javax.swing.JFrame {
             btnChangeCap.setEnabled(false);
             btnChangeVitesse.setEnabled(false);
             btnChangeAltitude.setEnabled(false);
-        }
+        }*/
         //JOptionPane.showMessageDialog(this, item);
     }//GEN-LAST:event_lstFlightsValueChanged
 
@@ -296,7 +296,7 @@ public class ControllerFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+   /* public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
@@ -307,7 +307,7 @@ public class ControllerFrame extends javax.swing.JFrame {
                 new ControllerFrame().setVisible(true);
             }
         });
-    }
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChangeAltitude;

@@ -8,6 +8,7 @@ package Flight.Similateur.Objects;
 import Flight.Similateur.Common.Avion;
 import Flight.Similateur.Common.Message;
 import Flight.Similateur.UI.SACAFrame;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -78,7 +79,13 @@ class ClientThread extends Thread {
     @Override
     public void run() {
         while (true) {
-            ReceiveObject();
+            if (_inStream == null || _outStream == null
+                    || _clientSocket.isClosed() || !_clientSocket.isConnected()
+                    || _clientSocket.isInputShutdown() || _clientSocket.isOutputShutdown()) {
+                break;
+            }
+            if ( !ReceiveObject())
+                break;
 
         }
     }
@@ -106,17 +113,17 @@ class ClientThread extends Thread {
             //_serverFrame.txtInfo.append("\n[SACA]>>[" + obj.recipient + "]: " + obj.command);
 
         } catch (IOException ex) {
-            Logger.getLogger(ClientThread.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(ClientThread.class
+            //        .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void ReceiveObject() {
+    public boolean ReceiveObject() {
         try {
             Object message = _inStream.readObject();
             if (message == null) {
                 _serverFrame.txtInfo.append("\nInvalid message received..");
-                return;
+                return true;
 
             }
 
@@ -128,9 +135,12 @@ class ClientThread extends Thread {
             // _serverFrame.txtInfo.append("\n[SACA]: new message received...");
             _socketServer.HandleMessage(_Id, msg);
             // _serverFrame.txtInfo.append("\n[SACA]: message handled... ");
-
+            return true;
             //return obj;
-        } catch (IOException ex) {
+        }
+        catch(EOFException ex)
+        {}
+        catch (IOException ex) {
             Logger.getLogger(ClientThread.class
                     .getName()).log(Level.SEVERE, null, ex);
 
@@ -139,6 +149,7 @@ class ClientThread extends Thread {
                     .getName()).log(Level.SEVERE, null, ex);
 
         }
+        return false;
     }
 }
 
@@ -150,13 +161,13 @@ public class SocketSACA extends Thread {
     public List<ClientThread> _radarThreads;
     private int _port = 9876;
 
-    public SocketSACA(SACAFrame serverFrame) {
+    public SocketSACA(SACAFrame serverFrame, int port) {
         try {
             _serverFrame = serverFrame;
             _serverSocket = new ServerSocket(_port);
             _flightThreads = new ArrayList();
             _radarThreads = new ArrayList();
-
+            _port = port;
             this.start();
         } catch (IOException ex) {
             Logger.getLogger(SocketSACA.class.getName()).log(Level.SEVERE, null, ex);
@@ -172,7 +183,7 @@ public class SocketSACA extends Thread {
                 return;
             }
             if (msg.command.contains("Connection")) {
-                // _serverFrame.txtInfo.append("\n[" + msg.sender + "] >> [" + msg.recipient + "]: Connection closed..");
+                 _serverFrame.txtInfo.append("\n[" + msg.sender + "] >> [" + msg.recipient + "]: Connection closed..");
                 _flightThreads.remove(senderFlightThread);
                 if (_radarThreads != null && _radarThreads.size() > 0) {
                     for (int i = 0; i < _radarThreads.size(); i++) {
@@ -215,7 +226,18 @@ public class SocketSACA extends Thread {
         } else if (msg.type.equals("controller")) {//msgs received from the controller
             if (msg.command.contains("Connection")) {//Just an info
                 _serverFrame.txtInfo.append("\n[" + msg.sender + "] >> [SACA]: Connexion fermée..");
-                ClientThread conThread = FindRadarThread(Integer.parseInt(msg.sender));
+                if (  msg.sender == null )
+                    return;
+                int senderId ;
+                try
+                {
+                    senderId = Integer.parseInt(msg.sender);
+                }
+                catch(Exception e)
+                {
+                    return;
+                }
+                ClientThread conThread = FindRadarThread(senderId);
                 if (conThread != null) {
                     _radarThreads.remove(conThread);
                 }

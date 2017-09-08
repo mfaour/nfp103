@@ -91,8 +91,10 @@ public class ControllerSocket extends Thread {
         SendObject(msg);
     }
 
-    public ControllerSocket(ControllerFrame controllerFrame) {
+    public ControllerSocket(ControllerFrame controllerFrame,int port,String host) {
         _controllerFrame = controllerFrame;
+        PORT = port;
+        HOST = host;
         try {
             if (!ouvrir_communication()) {
                 _controllerFrame.txtInfo.append("Erreur lors de la connexion au SACA..");

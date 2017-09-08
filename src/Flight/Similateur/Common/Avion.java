@@ -8,6 +8,7 @@ package Flight.Similateur.Common;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.vecmath.Color3f;
 
 /**
  *
@@ -20,7 +21,7 @@ public class Avion implements Serializable {
     private String _flightName;
     private int _flightId;
     private boolean _isLocked;
-
+    private Color3f _volColor;
     public boolean IsLocked() {
          return _isLocked ;
     }
@@ -110,6 +111,20 @@ public class Avion implements Serializable {
      */
     public void setFlightId(int _flightId) {
         this._flightId = _flightId;
+    }
+
+    /**
+     * @return the _volColor
+     */
+    public Color3f getVolColor() {
+        return _volColor;
+    }
+
+    /**
+     * @param _volColor the _volColor to set
+     */
+    public void setVolColor(Color3f _volColor) {
+        this._volColor = _volColor;
     }
        
 }

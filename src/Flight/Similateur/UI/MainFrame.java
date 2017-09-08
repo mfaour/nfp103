@@ -5,6 +5,8 @@
  */
 package Flight.Similateur.UI;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author mfaour
@@ -40,6 +42,7 @@ public class MainFrame extends javax.swing.JFrame {
         txtPort = new javax.swing.JTextField();
         txtRefreshTime = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        btnGraphicRadar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -119,6 +122,17 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().add(jLabel3);
         jLabel3.setBounds(30, 140, 160, 29);
 
+        btnGraphicRadar.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        btnGraphicRadar.setText("Nouveau Graphic Radar");
+        btnGraphicRadar.setEnabled(false);
+        btnGraphicRadar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGraphicRadarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnGraphicRadar);
+        btnGraphicRadar.setBounds(30, 410, 400, 37);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -126,8 +140,9 @@ public class MainFrame extends javax.swing.JFrame {
         int port = Integer.parseInt(txtPort.getText());   
         int refreshTime = Integer.parseInt(txtRefreshTime.getText());
 
-        VolFrame frame = new VolFrame(port, txtHost.getText(),refreshTime);
-        frame.setVisible(true);
+        VolFrame vf = new VolFrame(port, txtHost.getText(),refreshTime);
+         vf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        vf.setVisible(true);
 
     }//GEN-LAST:event_btnVolActionPerformed
 
@@ -135,20 +150,34 @@ public class MainFrame extends javax.swing.JFrame {
         int port = Integer.parseInt(txtPort.getText());
         btnServer.setEnabled(false);
         btnRadar.setEnabled(true);
+        btnGraphicRadar.setEnabled(true);
         btnVol.setEnabled(true);
         btnController.setEnabled(true);
+        txtHost.setEnabled(false);
+        txtPort.setEnabled(false);
         new SACAFrame(port).setVisible(true);
     }//GEN-LAST:event_btnServerActionPerformed
 
     private void btnRadarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRadarActionPerformed
         int port = Integer.parseInt(txtPort.getText());
-        new GraphRadarFrame(port, txtHost.getText()).setVisible(true);
+        RadarFrame rf = new RadarFrame(port, txtHost.getText());
+        rf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        rf.setVisible(true);
     }//GEN-LAST:event_btnRadarActionPerformed
 
     private void btnControllerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnControllerActionPerformed
         int port = Integer.parseInt(txtPort.getText());
-        new ControllerFrame(port, txtHost.getText()).setVisible(true);
+        ControllerFrame cf = new ControllerFrame(port, txtHost.getText());
+        cf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        cf.setVisible(true);
     }//GEN-LAST:event_btnControllerActionPerformed
+
+    private void btnGraphicRadarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGraphicRadarActionPerformed
+        int port = Integer.parseInt(txtPort.getText());
+        GraphRadarFrame gf = new GraphRadarFrame(port, txtHost.getText());
+        gf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        gf.setVisible(true);
+    }//GEN-LAST:event_btnGraphicRadarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -187,6 +216,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnController;
+    private javax.swing.JButton btnGraphicRadar;
     private javax.swing.JButton btnRadar;
     private javax.swing.JButton btnServer;
     private javax.swing.JButton btnVol;

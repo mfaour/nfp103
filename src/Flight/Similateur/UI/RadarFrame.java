@@ -16,11 +16,11 @@ public class RadarFrame extends javax.swing.JFrame {
 
     RadarSocket _socketClient = null;
 
-    public RadarFrame() {
+    public RadarFrame(int port,String host) {
         initComponents();
         this.setSize(1500, 800);
         this.setLocationRelativeTo(null);
-        _socketClient = new RadarSocket(this);
+        _socketClient = new RadarSocket(this,port,host);
     }
 
     /**
@@ -97,7 +97,7 @@ public class RadarFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+ /*   public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
@@ -109,7 +109,7 @@ public class RadarFrame extends javax.swing.JFrame {
             }
         });
     }
-
+*/
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

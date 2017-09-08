@@ -16,12 +16,12 @@ public class VolFrame extends javax.swing.JFrame {
 
     VolSocket _volSocket = null;
 
-    public VolFrame() {
+    public VolFrame(int port, String host,int refreshTime) {
         initComponents();
         this.setSize(1500, 800);
         this.setTitle("Vol...");
         this.setLocationRelativeTo(null);
-        _volSocket = new VolSocket(this);
+        _volSocket = new VolSocket(this,port,host,refreshTime);
 
     }
 
@@ -65,7 +65,7 @@ public class VolFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    /*public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
@@ -76,7 +76,7 @@ public class VolFrame extends javax.swing.JFrame {
                 new VolFrame().setVisible(true);
             }
         });
-    }
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane2;
